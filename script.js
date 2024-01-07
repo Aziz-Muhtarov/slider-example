@@ -1,91 +1,94 @@
-const entities = [
+let images = [
     {
         city: 'Rostov-on-Don LCD admiral',
         area: '81 m2',
         time: '3.5 months',
         cost: 'Upon request',
-        img: '/src/img/first-photo.jpg'
+        url: '/src/img/first-photo.jpg'
     },
     {
         city: 'Sochi Thieves',
         area: '105 m2',
         time: '4 months',
         cost: 'Upon request',
-        img: './src/img/second-photo.jpg'
+        url: './src/img/second-photo.jpg'
     },
     {
         city: 'Rostov-on-Don Patriotic',
         area: '93 m2',
         time: '3 months',
         cost: 'Upon request',
-        img: './src/img/third-photo.jpg'
+        url: './src/img/third-photo.jpg'
     }
-]
+];
 
-const city = document.querySelector('.city')
-const area = document.querySelector('.area')
-const time = document.querySelector('.time')
-const cost = document.querySelector('.cost')
-const img = document.querySelector('.image')
+function initSlider(options) {
+    if (!images || !images.length) return;
+
+    // options = options || {
+    //     titles: false
+    // };
+
+    let sliderImages = document.querySelector(".slider__images");
+    let sliderArrows = document.querySelector(".slider__arrows");
+    let sliderDots = document.querySelector(".slider__dots");
 
 
+    initImages();
+    initArrows();
+    initDots();
 
-const setEntity = (index) => {
-    city.innerText = entities[index].city
-    area.innerText = entities[index].area
-    time.innerText = entities[index].time
-    cost.innerText = entities[index].cost
-    img.style.backgroundImage = `url(${entities[index].img})`
+    function initImages () {
+        images.forEach((image, index) => {
+            let imageDiv = `<div class="image n${index} ${index === 0? "active" : ""}" 
+            style="background-image:url(${images[index].url});" data-index="${index}"></div>`;
+            sliderImages.innerHTML += imageDiv;
+        });
+    }
+
+    function initArrows () {
+        sliderArrows.querySelectorAll(".slider__arrow").forEach(arrow => {
+            arrow.addEventListener("click", function () {
+                let curNumber = +sliderImages.querySelector(".active").dataset.index;
+                let nextNumber;
+
+                if (arrow.classList.contains("left")) {
+                    nextNumber = curNumber === 0? images.length - 1 : curNumber - 1;
+                } else {
+                    nextNumber = curNumber === images.length - 1? 0 : curNumber + 1;
+                }
+                moveSlider(nextNumber);
+            });
+        });
+    }
+
+
+    function initDots() {
+        images.forEach((image, index) => {
+            let dot = `<div class="slider__dots-item n${index} ${index === 0? "active" : ""}" data-index="${index}"></div>`;
+            sliderDots.innerHTML += dot;
+        });
+        sliderDots.querySelectorAll(".slider__dots-item").forEach(dot => {
+            dot.addEventListener("click", function() {
+                moveSlider(this.dataset.index);
+            });
+        })
+    }
+
+    function moveSlider(num) {
+        sliderImages.querySelector(".active").classList.remove("active");
+        sliderImages.querySelector(".n" + num).classList.add("active");
+        sliderDots.querySelector(".active").classList.remove("active");
+        sliderDots.querySelector(".n" + num).classList.add("active");
+    };
 }
 
-const prev = document.querySelector('.prev')
-const next = document.querySelector('.next')
-
-const firstImg = document.querySelector('.firstImg')
-const secondImg = document.querySelector('.secondImg')
-const thirdImg = document.querySelector('.thirdImg')
-
-const firstPoint = document.querySelector('.firstPoint')
-const secondPoint = document.querySelector('.secondPoint')
-const thirdPoint = document.querySelector('.thirdPoint')
+// let sliderOptions = {
+//     titles: true
+// }
 
 
 
-let currentIndex = 0
-
-prev.addEventListener('click', () => {
-    setEntity(currentIndex - 1);
-    currentIndex -= 1;
-})
-
-next.addEventListener('click', () => {
-    setEntity(currentIndex + 1);
-    currentIndex += 1;
-})
-
-firstImg.addEventListener('click', () => {
-    setEntity(currentIndex + 0);
-})
-
-secondImg.addEventListener('click', () => {
-    setEntity(currentIndex + 1);
-})
-
-thirdImg.addEventListener('click', () => {
-    setEntity(currentIndex + 2);
-})
-
-firstPoint.addEventListener('click', () => {
-    setEntity(currentIndex + 0);
-    firstPoint.style.backgroundColor = '#fff';
-})
-
-secondPoint.addEventListener('click', () => {
-    setEntity(currentIndex + 1);
-    secondPoint.style.backgroundColor = '#fff';
-})
-
-thirdPoint.addEventListener('click', () => {
-    setEntity(currentIndex + 2);
-    thirdPoint.style.backgroundColor = '#fff';
-})
+document.addEventListener('DOMContentLoaded', function() {
+    initSlider();
+});
