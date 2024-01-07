@@ -25,10 +25,6 @@ let images = [
 function initSlider(options) {
     if (!images || !images.length) return;
 
-    // options = options || {
-    //     titles: false
-    // };
-
     let sliderImages = document.querySelector(".slider__images");
     let sliderArrows = document.querySelector(".slider__arrows");
     let sliderDots = document.querySelector(".slider__dots");
@@ -82,10 +78,6 @@ function initSlider(options) {
         sliderDots.querySelector(".n" + num).classList.add("active");
     };
 }
-
-// let sliderOptions = {
-//     titles: true
-// }
 
 
 
